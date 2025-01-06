@@ -108,6 +108,7 @@
         "symfony/serializer": "self.version",
         "symfony/stopwatch": "self.version",
         "symfony/string": "self.version",
+        "symfony/pgp": "self.version",
         "symfony/translation": "self.version",
         "symfony/twig-bridge": "self.version",
         "symfony/twig-bundle": "self.version",
@@ -160,7 +161,8 @@
         "twig/cssinliner-extra": "^2.12|^3",
         "twig/inky-extra": "^2.12|^3",
         "twig/markdown-extra": "^2.12|^3",
-        "web-token/jwt-library": "^3.3.2|^4.0"
+        "web-token/jwt-library": "^3.3.2|^4.0",
+        "pear/crypt_gpg": "^1.6"
     },
     "conflict": {
         "ext-psr": "<1.1|>=2",
