@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\Component\Pgp\Tests\Crypto;
+namespace Symfony\Component\Pgp\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Address;
@@ -28,7 +28,7 @@ class PgpEncryptorTest extends TestCase
     {
         parent::setUp();
         $this->gpg = new \Crypt_GPG();
-        $this->gpg->importKeyFile(__DIR__.'/../_data/pgp_test_key.asc');
+        $this->gpg->importKeyFile(__DIR__.'/_data/pgp_test_key.asc');
         $this->email = (new Email())
             ->from(new Address('pgp@pulli.dev', 'PuLLi'))
             ->to(new Address('pgp@pulli.dev', 'PuLLi'))
@@ -62,10 +62,14 @@ class PgpEncryptorTest extends TestCase
     public function testSigning()
     {
         $this->encrypter->sign($this->email, 'test1234');
-        $this->assertStringContainsString('-----BEGIN PGP SIGNATURE-----', $this->encrypter->signature);
-        $this->assertStringContainsString('-----END PGP SIGNATURE-----', $this->encrypter->signature);
 
-        $key = $this->gpg->verify($this->encrypter->signed, $this->encrypter->signature);
+        $signature = $this->encrypter->getSignature();
+
+        $this->assertStringContainsString('-----BEGIN PGP SIGNATURE-----', $signature);
+        $this->assertStringContainsString('-----END PGP SIGNATURE-----', $signature);
+
+        $key = $this->gpg->verify($this->encrypter->getSignedPart(), $signature);
+
         $this->assertCount(1, $key);
         $this->assertSame('pgp@pulli.dev', $key[0]->getUserId()->getEmail());
     }

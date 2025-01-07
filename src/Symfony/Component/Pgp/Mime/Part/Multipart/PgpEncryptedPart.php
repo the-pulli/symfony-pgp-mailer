@@ -16,8 +16,10 @@ use Symfony\Component\Mime\Part\AbstractPart;
 
 /*
  * @author PuLLi <the@pulli.dev>
+ *
+ * @internal
  */
-class PgpEncryptedPart extends AbstractMultipartPart
+final class PgpEncryptedPart extends AbstractMultipartPart
 {
     public function __construct(AbstractPart ...$parts)
     {

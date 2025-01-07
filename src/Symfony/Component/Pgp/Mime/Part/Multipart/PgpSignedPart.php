@@ -17,8 +17,10 @@ use Symfony\Component\Pgp\Mime\Traits\PgpSigningTrait;
 
 /*
  * @author PuLLi <the@pulli.dev>
+ *
+ * @internal
  */
-class PgpSignedPart extends AbstractMultipartPart
+final class PgpSignedPart extends AbstractMultipartPart
 {
     use PgpSigningTrait;
 

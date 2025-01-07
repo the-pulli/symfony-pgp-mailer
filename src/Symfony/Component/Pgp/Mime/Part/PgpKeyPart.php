@@ -15,8 +15,10 @@ use Symfony\Component\Mime\Part\AbstractPart;
 
 /*
  * @author PuLLi <the@pulli.dev>
+ *
+ * @internal
  */
-class PgpKeyPart extends AbstractPart
+final class PgpKeyPart extends AbstractPart
 {
     private string $key;
 

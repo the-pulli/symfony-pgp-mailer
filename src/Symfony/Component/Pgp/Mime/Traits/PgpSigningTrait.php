@@ -16,15 +16,17 @@ use Symfony\Component\Mime\Part\AbstractPart;
 
 /*
  * @author PuLLi <the@pulli.dev>
+ *
+ * @internal
  */
 trait PgpSigningTrait
 {
-    protected function normalizeLineEnding(string $text): string
+    private function normalizeLineEnding(string $text): string
     {
         return str_replace("\n", "\r\n", str_replace(["\r\n", "\r"], "\n", $text));
     }
 
-    protected function prepareMessageForSigning(AbstractPart $part, string $msg): string
+    private function prepareMessageForSigning(AbstractPart $part, string $msg): string
     {
         // Only text part
         if ('text' === $part->getMediaType()) {
@@ -40,7 +42,7 @@ trait PgpSigningTrait
     /**
      * @param AbstractPart[] $parts
      */
-    protected function findTextPart(array $parts, string $msg): string
+    private function findTextPart(array $parts, string $msg): string
     {
         foreach ($parts as $part) {
             $msg = $this->prepareMessageForSigning($part, $msg);
@@ -49,7 +51,7 @@ trait PgpSigningTrait
         return $msg;
     }
 
-    protected function getMessage(AbstractPart $part, string $msg): string
+    private function getMessage(AbstractPart $part, string $msg): string
     {
         $textPart = $part->toString();
         $normalizedText = $this->normalizeLineEnding($textPart);

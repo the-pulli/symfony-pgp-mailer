@@ -15,8 +15,10 @@ use Symfony\Component\Mime\Part\AbstractPart;
 
 /*
  * @author PuLLi <the@pulli.dev>
+ *
+ * @internal
  */
-class PgpSignaturePart extends AbstractPart
+final class PgpSignaturePart extends AbstractPart
 {
     private string $signature;
 
