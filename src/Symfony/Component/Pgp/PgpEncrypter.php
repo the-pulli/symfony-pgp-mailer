@@ -15,10 +15,10 @@ use Symfony\Component\Mime\Header\Headers;
 use Symfony\Component\Mime\Header\MailboxListHeader;
 use Symfony\Component\Mime\Message;
 use Symfony\Component\Mime\Part\Multipart\MixedPart;
-use Symfony\Component\Pgp\Exception\PgpBadPassphraseException;
-use Symfony\Component\Pgp\Exception\PgpFileException;
-use Symfony\Component\Pgp\Exception\PgpGeneralException;
-use Symfony\Component\Pgp\Exception\PgpKeyNotFoundException;
+use Symfony\Component\Pgp\Exception\BadPassphraseException;
+use Symfony\Component\Pgp\Exception\FileException;
+use Symfony\Component\Pgp\Exception\GeneralException;
+use Symfony\Component\Pgp\Exception\KeyNotFoundException;
 use Symfony\Component\Pgp\Mime\Part\Multipart\PgpEncryptedPart;
 use Symfony\Component\Pgp\Mime\Part\Multipart\PgpSignedPart;
 use Symfony\Component\Pgp\Mime\Part\PgpEncryptedInitializationPart;
@@ -45,8 +45,8 @@ final class PgpEncrypter
     public string $signed = '';
 
     /**
-     * @throws PgpFileException
-     * @throws PgpGeneralException
+     * @throws FileException
+     * @throws GeneralException
      */
     public function __construct(array $options = [])
     {
@@ -61,9 +61,9 @@ final class PgpEncrypter
                 )
             );
         } catch (\Crypt_GPG_FileException $e) {
-            throw new PgpFileException($e->getMessage());
+            throw new FileException($e->getMessage());
         } catch (\PEAR_Exception $e) {
-            throw new PgpGeneralException($e->getMessage());
+            throw new GeneralException($e->getMessage());
         }
     }
 
@@ -73,45 +73,45 @@ final class PgpEncrypter
     }
 
     /**
-     * @throws PgpBadPassphraseException
-     * @throws PgpKeyNotFoundException
-     * @throws PgpGeneralException
+     * @throws BadPassphraseException
+     * @throws KeyNotFoundException
+     * @throws GeneralException
      */
     public function encrypt(Message $message, bool $attachKey = false): Message
     {
         try {
             return $this->encryptWithOrWithoutSigning($message, false, null, $attachKey);
         } catch (\Crypt_GPG_BadPassphraseException $e) {
-            throw new PgpBadPassphraseException($e->getMessage());
+            throw new BadPassphraseException($e->getMessage());
         } catch (\Crypt_GPG_KeyNotFoundException $e) {
-            throw new PgpKeyNotFoundException($e->getMessage());
+            throw new KeyNotFoundException($e->getMessage());
         } catch (\Crypt_GPG_Exception $e) {
-            throw new PgpGeneralException($e->getMessage());
+            throw new GeneralException($e->getMessage());
         }
     }
 
     /**
-     * @throws PgpBadPassphraseException
-     * @throws PgpKeyNotFoundException
-     * @throws PgpGeneralException
+     * @throws BadPassphraseException
+     * @throws KeyNotFoundException
+     * @throws GeneralException
      */
     public function encryptAndSign(Message $message, ?string $passphrase = null, bool $attachKey = false): Message
     {
         try {
             return $this->encryptWithOrWithoutSigning($message, true, $passphrase, $attachKey);
         } catch (\Crypt_GPG_BadPassphraseException $e) {
-            throw new PgpBadPassphraseException($e->getMessage());
+            throw new BadPassphraseException($e->getMessage());
         } catch (\Crypt_GPG_KeyNotFoundException $e) {
-            throw new PgpKeyNotFoundException($e->getMessage());
+            throw new KeyNotFoundException($e->getMessage());
         } catch (\Crypt_GPG_Exception $e) {
-            throw new PgpGeneralException($e->getMessage());
+            throw new GeneralException($e->getMessage());
         }
     }
 
     /**
-     * @throws PgpBadPassphraseException
-     * @throws PgpKeyNotFoundException
-     * @throws PgpGeneralException
+     * @throws BadPassphraseException
+     * @throws KeyNotFoundException
+     * @throws GeneralException
      */
     private function encryptWithOrWithoutSigning(Message $message, bool $sign = false, ?string $passphrase = null, bool $attachKey = false): Message
     {
@@ -126,9 +126,9 @@ final class PgpEncrypter
             try {
                 $body = $this->attachPublicKey($message);
             } catch (\Crypt_GPG_KeyNotFoundException $e) {
-                throw new PgpKeyNotFoundException($e->getMessage());
+                throw new KeyNotFoundException($e->getMessage());
             } catch (\Crypt_GPG_Exception $e) {
-                throw new PgpGeneralException($e->getMessage());
+                throw new GeneralException($e->getMessage());
             }
         }
 
@@ -138,19 +138,19 @@ final class PgpEncrypter
             try {
                 $body = $this->gpg->encryptAndSign($body->toString());
             } catch (\Crypt_GPG_BadPassphraseException $e) {
-                throw new PgpBadPassphraseException($e->getMessage());
+                throw new BadPassphraseException($e->getMessage());
             } catch (\Crypt_GPG_KeyNotFoundException $e) {
-                throw new PgpKeyNotFoundException($e->getMessage());
+                throw new KeyNotFoundException($e->getMessage());
             } catch (\Crypt_GPG_Exception $e) {
-                throw new PgpGeneralException($e->getMessage());
+                throw new GeneralException($e->getMessage());
             }
         } else {
             try {
                 $body = $this->gpg->encrypt($body->toString());
             } catch (\Crypt_GPG_KeyNotFoundException $e) {
-                throw new PgpKeyNotFoundException($e->getMessage());
+                throw new KeyNotFoundException($e->getMessage());
             } catch (\Crypt_GPG_Exception $e) {
-                throw new PgpGeneralException($e->getMessage());
+                throw new GeneralException($e->getMessage());
             }
         }
 
@@ -163,9 +163,9 @@ final class PgpEncrypter
     }
 
     /**
-     * @throws PgpBadPassphraseException
-     * @throws PgpKeyNotFoundException
-     * @throws PgpGeneralException
+     * @throws BadPassphraseException
+     * @throws KeyNotFoundException
+     * @throws GeneralException
      */
     public function sign(Message $message, ?string $passphrase = null, bool $attachKey = false): Message
     {
@@ -177,9 +177,9 @@ final class PgpEncrypter
             try {
                 $mixed = $this->attachPublicKey($message);
             } catch (\Crypt_GPG_KeyNotFoundException $e) {
-                throw new PgpKeyNotFoundException($e->getMessage());
+                throw new KeyNotFoundException($e->getMessage());
             } catch (\Crypt_GPG_Exception $e) {
-                throw new PgpGeneralException($e->getMessage());
+                throw new GeneralException($e->getMessage());
             }
 
             $body = $mixed->toString();
@@ -195,11 +195,11 @@ final class PgpEncrypter
         try {
             $signature = $this->gpg->sign($body, \Crypt_GPG::SIGN_MODE_DETACHED);
         } catch (\Crypt_GPG_BadPassphraseException $e) {
-            throw new PgpBadPassphraseException($e->getMessage());
+            throw new BadPassphraseException($e->getMessage());
         } catch (\Crypt_GPG_KeyNotFoundException $e) {
-            throw new PgpKeyNotFoundException($e->getMessage());
+            throw new KeyNotFoundException($e->getMessage());
         } catch (\Crypt_GPG_Exception $e) {
-            throw new PgpGeneralException($e->getMessage());
+            throw new GeneralException($e->getMessage());
         }
 
         $this->signature = $signature;
@@ -212,17 +212,17 @@ final class PgpEncrypter
     }
 
     /**
-     * @throws PgpKeyNotFoundException
-     * @throws PgpGeneralException
+     * @throws KeyNotFoundException
+     * @throws GeneralException
      */
     private function attachPublicKey(Message $message): MixedPart
     {
         try {
             $publicKey = $this->gpg->exportPublicKey($this->determineSigningKey());
         } catch (\Crypt_GPG_KeyNotFoundException $e) {
-            throw new PgpKeyNotFoundException($e->getMessage());
+            throw new KeyNotFoundException($e->getMessage());
         } catch (\Crypt_GPG_Exception $e) {
-            throw new PgpGeneralException($e->getMessage());
+            throw new GeneralException($e->getMessage());
         }
         $key = new PgpKeyPart($publicKey);
 

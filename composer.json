@@ -161,8 +161,8 @@
         "twig/cssinliner-extra": "^2.12|^3",
         "twig/inky-extra": "^2.12|^3",
         "twig/markdown-extra": "^2.12|^3",
-        "web-token/jwt-library": "^3.3.2|^4.0",
-        "pear/crypt_gpg": "^1.6"
+        "pear/crypt_gpg": "^1.6",
+        "web-token/jwt-library": "^3.3.2|^4.0"
     },
     "conflict": {
         "ext-psr": "<1.1|>=2",

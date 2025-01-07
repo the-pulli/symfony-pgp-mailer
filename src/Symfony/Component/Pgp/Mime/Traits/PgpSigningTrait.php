@@ -16,7 +16,6 @@ use Symfony\Component\Mime\Part\AbstractPart;
 
 /*
  * @author PuLLi <the@pulli.dev>
- *
  */
 trait PgpSigningTrait
 {

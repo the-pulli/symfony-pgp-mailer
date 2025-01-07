@@ -14,6 +14,6 @@ namespace Symfony\Component\Pgp\Exception;
 /**
  * @author PuLLi <the@pulli.dev>
  */
-class PgpBadPassphraseException extends InvalidArgumentException
+class BadPassphraseException extends \InvalidArgumentException implements ExceptionInterface
 {
 }

@@ -14,6 +14,6 @@ namespace Symfony\Component\Pgp\Exception;
 /**
  * @author PuLLi <the@pulli.dev>
  */
-class PgpFileException extends RuntimeException
+class GeneralException extends \Exception implements ExceptionInterface
 {
 }

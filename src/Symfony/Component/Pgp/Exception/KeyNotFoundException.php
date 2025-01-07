@@ -14,6 +14,6 @@ namespace Symfony\Component\Pgp\Exception;
 /**
  * @author PuLLi <the@pulli.dev>
  */
-class PgpGeneralException extends \Exception implements ExceptionInterface
+class KeyNotFoundException extends \RuntimeException implements ExceptionInterface
 {
 }
